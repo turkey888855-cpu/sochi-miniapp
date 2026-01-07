@@ -1,54 +1,167 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TRAVEL SOCHI</title>
 
-  <!-- Telegram SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
       margin: 0;
+      background: #0B1220;
+      color: #fff;
       padding: 20px;
     }
 
     h1 {
-      text-align: center;
-      margin-bottom: 20px;
+      font-size: 26px;
+      margin-bottom: 6px;
     }
 
-    button {
-      width: 100%;
-      padding: 15px;
-      margin: 8px 0;
-      font-size: 16px;
-      background: #2563eb;
-      border: none;
-      border-radius: 8px;
-      color: white;
+    .subtitle {
+      color: #94A3B8;
+      margin-bottom: 24px;
+    }
+
+    /* ---------- CARD ---------- */
+
+    .card {
+      position: relative;
+      height: 140px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 18px;
       cursor: pointer;
+      transform: scale(1);
+      transition: transform 0.25s cubic-bezier(.2,.8,.2,1);
     }
 
-    button:hover {
-      background: #1d4ed8;
+    .card:active {
+      transform: scale(1.03);
+    }
+
+    .card-image {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.4s ease;
+    }
+
+    .card:active .card-image {
+      transform: scale(1.1);
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(11,18,32,0.95),
+        rgba(11,18,32,0.4),
+        rgba(11,18,32,0.1)
+      );
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #CBD5E1;
+    }
+
+    .card-price {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #2DD4BF;
+      font-weight: 600;
+    }
+
+    /* ---------- VIP ---------- */
+
+    .vip {
+      border: 1px solid #2DD4BF;
+    }
+
+    .vip .card-price {
+      color: #FACC15;
     }
   </style>
 </head>
 
 <body>
 
-<h1>🌴 TRAVEL SOCHI</h1>
+  <h1>🌴 TRAVEL SOCHI</h1>
+  <div class="subtitle">Премиальные экскурсии и маршруты</div>
 
-<button onclick="selectTour('Джиппинг')">🚙 Джиппинг</button>
-<button onclick="selectTour('Абхазия')">🇦🇧 Абхазия</button>
-<button onclick="selectTour('Яхта')">⛵ Яхта</button>
-<button onclick="selectTour('Горы')">🏔 Горы</button>
-<button onclick="selectTour('Индивидуальный маршрут')">🧠 Индивидуальный маршрут</button>
+  <div class="card" onclick="select('jeep')">
+    <div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee')"></div>
+    <div class="card-overlay">
+      <div class="card-title">🚙 Джиппинг</div>
+      <div class="card-desc">Горы, водопады, адреналин</div>
+      <div class="card-price">от 3 500 ₽</div>
+    </div>
+  </div>
 
-<script src="script.js"></script>
+  <div class="card" onclick="select('abkhazia')">
+    <div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"></div>
+    <div class="card-overlay">
+      <div class="card-title">🌴 Абхазия</div>
+      <div class="card-desc">Море, пальмы, история</div>
+      <div class="card-price">от 4 500 ₽</div>
+    </div>
+  </div>
+
+  <div class="card" onclick="select('yacht')">
+    <div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21')"></div>
+    <div class="card-overlay">
+      <div class="card-title">⛵ Яхта</div>
+      <div class="card-desc">Морская прогулка и закаты</div>
+      <div class="card-price">от 6 000 ₽</div>
+    </div>
+  </div>
+
+  <div class="card" onclick="select('mountains')">
+    <div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470')"></div>
+    <div class="card-overlay">
+      <div class="card-title">🏔 Горы</div>
+      <div class="card-desc">Каньоны и панорамы</div>
+      <div class="card-price">от 3 000 ₽</div>
+    </div>
+  </div>
+
+  <div class="card vip" onclick="select('vip')">
+    <div class="card-image" style="background-image:url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1')"></div>
+    <div class="card-overlay">
+      <div class="card-title">🧠 Индивидуальный маршрут</div>
+      <div class="card-desc">Подберём под вас</div>
+      <div class="card-price">VIP формат</div>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function select(type) {
+      tg.sendData(type);
+    }
+  </script>
+
 </body>
 </html>
