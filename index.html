@@ -5,116 +5,45 @@
   <title>TRAVEL SOCHI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+  <!-- Telegram SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    body {
-      margin: 0;
-      background: linear-gradient(180deg, #050b1e, #0b1d3a);
-      color: white;
-      overflow-x: hidden;
-    }
-
-    .screen {
-      min-height: 100vh;
-      padding: 24px;
-      transition: transform 0.45s ease, opacity 0.45s ease;
-    }
-
-    .hidden {
-      opacity: 0;
-      transform: translateX(100%);
-      pointer-events: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 28px;
-      letter-spacing: 1px;
-    }
-
-    .card {
-      position: relative;
-      height: 90px;
-      background-size: cover;
-      background-position: center;
-      border-radius: 18px;
-      margin-bottom: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(0,0,0,0.6), rgba(0,0,0,0.1));
-    }
-
-    .card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-
-    .card:active {
-      transform: scale(0.97);
-    }
-
-    .label {
-      position: absolute;
-      bottom: 14px;
-      left: 16px;
-      z-index: 2;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .back {
-      margin-bottom: 20px;
-      font-size: 16px;
-      opacity: 0.7;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- ЭКРАН 1 -->
-  <div id="home" class="screen">
-    <h1>🌴 TRAVEL SOCHI</h1>
+  <header class="header">
+    TRAVEL SOCHI
+  </header>
 
-    <div class="card" onclick="openCategory('Джиппинг')" style="background-image:url('https://i.imgur.com/Jeep.jpg')">
-      <div class="label">🚙 Джиппинг</div>
+  <main class="cards">
+
+    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee')"
+         onclick="selectCategory('Джиппинг')">
+      <span>Джиппинг</span>
     </div>
 
-    <div class="card" onclick="openCategory('Абхазия')" style="background-image:url('https://i.imgur.com/Abkhazia.jpg')">
-      <div class="label">🇦🇧 Абхазия</div>
+    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"
+         onclick="selectCategory('Абхазия')">
+      <span>Абхазия</span>
     </div>
 
-    <div class="card" onclick="openCategory('Яхта')" style="background-image:url('https://i.imgur.com/Yacht.jpg')">
-      <div class="label">⛵ Яхта</div>
+    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"
+         onclick="selectCategory('Яхта')">
+      <span>Яхта</span>
     </div>
 
-    <div class="card" onclick="openCategory('Горы')" style="background-image:url('https://i.imgur.com/Mountains.jpg')">
-      <div class="label">🏔 Горы</div>
+    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470')"
+         onclick="selectCategory('Горы')">
+      <span>Горы</span>
     </div>
-  </div>
 
-  <!-- ЭКРАН 2 -->
-  <div id="category" class="screen hidden">
-    <div class="back" onclick="goBack()">← Назад</div>
-    <h1 id="categoryTitle"></h1>
-    <p style="opacity:.7">Подробности будут здесь</p>
-  </div>
+    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429')"
+         onclick="selectCategory('Индивидуальный маршрут')">
+      <span>Индивидуальный маршрут</span>
+    </div>
+
+  </main>
 
   <script src="script.js"></script>
 </body>
