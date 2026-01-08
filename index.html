@@ -1,30 +1,129 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>TRAVEL SOCHI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌴 TRAVEL SOCHI</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем красивый шрифт Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Иконки для кнопок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Подключаем Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-
 <body>
-  <div class="header">🌴 TRAVEL SOCHI</div>
+    <div class="app-container">
+        <!-- Верхний бар с логотипом -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">🌴</span>
+                <h1 class="logo-text">TRAVEL SOCHI</h1>
+            </div>
+            <p class="tagline">Оставьте заявку на ваш идеальный отдых в Адлере и Сочи!</p>
+        </header>
 
-  <div id="cards" class="fade-in"></div>
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Экран 1: Каталог карточек -->
+            <section id="catalog-screen" class="screen active">
+                <h2>Выберите вид отдыха или услугу</h2>
+                <div class="cards-container" id="cards-container">
+                    <!-- Карточки будут сгенерированы скриптом -->
+                </div>
+            </section>
 
-  <div id="form" class="hidden slide-up">
-    <h2 id="form-title"></h2>
+            <!-- Экран 2: Детали выбранной карточки -->
+            <section id="details-screen" class="screen">
+                <button class="back-button" id="back-button">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+                <div class="details-card">
+                    <img id="details-image" src="" alt="Отдых">
+                    <div class="details-content">
+                        <h3 id="details-title"></h3>
+                        <p id="details-description"></p>
+                        <button class="btn-primary" id="apply-button">Оставить заявку</button>
+                    </div>
+                </div>
+            </section>
 
-    <input id="name" placeholder="Имя Фамилия">
-    <input id="phone" placeholder="+7 999 123-45-67">
-    <input id="city" placeholder="Адлер / Сочи">
-    <input id="people" placeholder="Количество человек">
+            <!-- Экран 3: Форма заявки -->
+            <section id="form-screen" class="screen">
+                <button class="back-button" id="back-form-button">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+                <div class="form-container">
+                    <h3>Заявка на: <span id="form-title"></span></h3>
+                    <form id="order-form">
+                        <div class="form-group">
+                            <label for="people">Количество человек *</label>
+                            <input type="number" id="people" min="1" max="20" required placeholder="Например: 2">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Имя и фамилия *</label>
+                            <input type="text" id="name" required placeholder="Например: Иван Иванов">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Номер телефона *</label>
+                            <input type="tel" id="phone" required placeholder="Например: +7 999 123 45 67">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Город *</label>
+                            <select id="city" required>
+                                <option value="" disabled selected>Выберите город</option>
+                                <option value="Адлер">Адлер</option>
+                                <option value="Сочи">Сочи</option>
+                            </select>
+                        </div>
+                        <!-- Поле для индивидуального заказа -->
+                        <div class="form-group" id="custom-order-group" style="display: none;">
+                            <label for="custom-order">Опишите ваш индивидуальный заказ *</label>
+                            <textarea id="custom-order" rows="3" placeholder="Например: Хочу комбинацию: прогулка на яхте + рафтинг. И добавьте встречу в аэропорту."></textarea>
+                        </div>
+                        <!-- Дополнительные услуги (для всех) -->
+                        <div class="form-group">
+                            <label>Дополнительные услуги (можно выбрать несколько):</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="service-checkbox" value="Встретить в аэропорту">
+                                    <span>Встретить в аэропорту (+2000₽)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="service-checkbox" value="Водитель на время отдыха">
+                                    <span>Водитель на время отдыха (+5000₽/день)</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="service-checkbox" value="Персональный гид">
+                                    <span>Персональный гид на время отдыха (+3000₽/день)</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Отправить заявку</button>
+                    </form>
+                </div>
+            </section>
 
-    <button onclick="sendOrder()">Отправить заявку</button>
-    <button class="back" onclick="goBack()">Назад</button>
-  </div>
+            <!-- Экран 4: Подтверждение отправки -->
+            <section id="success-screen" class="screen">
+                <div class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Заявка принята!</h3>
+                    <p>Скоро с вами свяжется наш исполнитель для уточнения деталей.</p>
+                    <p>Ожидайте сообщение в этом чате.</p>
+                    <button class"btn-secondary" id="back-to-catalog">Вернуться в каталог</button>
+                </div>
+            </section>
+        </main>
 
-<script src="script.js"></script>
+        <!-- Нижний бар (футер) -->
+        <footer class="app-footer">
+            <p>По всем вопросам обращайтесь в <a href="#" id="support-link">тех. поддержку</a></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
