@@ -1,10 +1,15 @@
 // Инициализация Telegram WebApp
 const tg = window.Telegram.WebApp;
+
+// Инициализируем WebApp
 tg.expand(); // Развернуть приложение на весь экран
+tg.ready(); // Говорим Telegram, что приложение готово
 tg.setHeaderColor('#1e3c72'); // Цвет шапки в стиле бренда
 tg.setBackgroundColor('#f5f7fa');
 
-// Данные карточек (виды отдыха в Адлере и Сочи)
+console.log('Telegram WebApp инициализирован:', tg.initDataUnsafe);
+
+// Данные карточек
 const cardsData = [
     {
         id: 1,
@@ -67,16 +72,14 @@ const supportLink = document.getElementById('support-link');
 
 // Инициализация приложения
 function initApp() {
-    console.log('Инициализация приложения...');
     renderCards();
     setupEventListeners();
+    console.log('Приложение инициализировано');
 }
 
 // Отрисовка карточек
 function renderCards() {
-    console.log('Отрисовка карточек...');
     cardsContainer.innerHTML = '';
-    
     cardsData.forEach(card => {
         const cardElement = document.createElement('div');
         cardElement.className = 'card';
@@ -87,48 +90,25 @@ function renderCards() {
         cardElement.addEventListener('click', () => openCardDetails(card));
         cardsContainer.appendChild(cardElement);
     });
-    
-    console.log(`Отрисовано ${cardsData.length} карточек`);
 }
 
 // Настройка обработчиков событий
 function setupEventListeners() {
-    console.log('Настройка обработчиков событий...');
+    backButton.addEventListener('click', () => showScreen(catalogScreen));
+    backFormButton.addEventListener('click', () => showScreen(detailsScreen));
     
-    // Кнопка "Назад" в деталях
-    backButton.addEventListener('click', () => {
-        showScreen(catalogScreen);
-    });
-
-    // Кнопка "Назад" в форме
-    backFormButton.addEventListener('click', () => {
-        showScreen(detailsScreen);
-    });
-
-    // Кнопка "Вернуться в каталог" после успешной отправки
     backToCatalogButton.addEventListener('click', () => {
         showScreen(catalogScreen);
-        // Очищаем форму
         orderForm.reset();
     });
-
-    // Кнопка "Оставить заявку"
-    applyButton.addEventListener('click', () => {
-        openForm();
-    });
-
-    // Отправка формы
+    
+    applyButton.addEventListener('click', () => openForm());
+    
     orderForm.addEventListener('submit', handleFormSubmit);
-
-    // Ссылка на тех. поддержку
+    
     supportLink.addEventListener('click', (e) => {
         e.preventDefault();
-        // Используем метод Telegram WebApp для открытия ссылки
-        if (tg && tg.openLink) {
-            tg.openLink('https://t.me/ChkaSencBan');
-        } else {
-            window.open('https://t.me/ChkaSencBan', '_blank');
-        }
+        tg.openTelegramLink('https://t.me/ChkaSencBan');
     });
 }
 
@@ -140,7 +120,6 @@ function showScreen(screen) {
 
 // Открыть детали карточки
 function openCardDetails(card) {
-    console.log('Открытие деталей карточки:', card.title);
     selectedCard = card;
     detailsImage.src = card.image;
     detailsImage.alt = card.title;
@@ -151,10 +130,8 @@ function openCardDetails(card) {
 
 // Открыть форму заявки
 function openForm() {
-    console.log('Открытие формы для:', selectedCard.title);
     formTitle.textContent = selectedCard.title;
     
-    // Если выбран "Индивидуальный заказ", показываем текстовое поле
     if (selectedCard.id === 6) {
         customOrderGroup.style.display = 'block';
         document.getElementById('custom-order').required = true;
@@ -169,7 +146,6 @@ function openForm() {
 // Обработка отправки формы
 function handleFormSubmit(e) {
     e.preventDefault();
-    console.log('Отправка формы...');
     
     // Собираем данные формы
     const formData = {
@@ -181,7 +157,7 @@ function handleFormSubmit(e) {
         additionalServices: []
     };
     
-    // Если индивидуальный заказ - добавляем описание
+    // Если индивидуальный заказ
     if (selectedCard.id === 6) {
         formData.customOrder = document.getElementById('custom-order').value;
     }
@@ -197,39 +173,34 @@ function handleFormSubmit(e) {
         return;
     }
     
-    // Если индивидуальный заказ без описания
     if (selectedCard.id === 6 && !formData.customOrder) {
         alert('Пожалуйста, опишите ваш индивидуальный заказ');
         return;
     }
     
-    console.log('Данные для отправки:', formData);
+    console.log('Отправляем данные:', formData);
     
-    // Отправляем данные в Telegram бота
+    // КРИТИЧЕСКИ ВАЖНО: отправляем данные в Telegram
     if (tg && tg.sendData) {
-        tg.sendData(JSON.stringify(formData));
-        console.log('Данные отправлены через Telegram WebApp');
+        // Telegram требует строку JSON
+        const dataString = JSON.stringify(formData);
+        console.log('Отправка данных через Telegram WebApp:', dataString);
+        
+        // Отправляем данные
+        tg.sendData(dataString);
+        
+        // Закрываем мини-приложение после отправки
+        setTimeout(() => {
+            tg.close();
+        }, 1000);
+        
+        // Показываем экран успеха
+        showScreen(successScreen);
     } else {
-        console.log('Telegram WebApp не доступен, данные:', formData);
-        // Для отладки в браузере
-        alert('В режиме отладки: данные формы: ' + JSON.stringify(formData, null, 2));
+        console.error('Telegram WebApp не доступен');
+        alert('Ошибка: Откройте приложение через Telegram бота');
     }
-    
-    // Показываем экран успеха
-    showScreen(successScreen);
 }
 
-// Инициализация приложения при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM загружен, инициализация...');
-    initApp();
-});
-
-// Обработка ошибок загрузки изображений
-document.addEventListener('error', function(e) {
-    if (e.target.tagName === 'IMG') {
-        console.error('Ошибка загрузки изображения:', e.target.src);
-        // Запасное изображение
-        e.target.src = 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
-    }
-}, true);
+// Инициализация приложения
+document.addEventListener('DOMContentLoaded', initApp);
