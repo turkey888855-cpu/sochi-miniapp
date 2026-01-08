@@ -1,13 +1,14 @@
 // Инициализация Telegram WebApp
 const tg = window.Telegram.WebApp;
 
-// Включаем логирование
-console.log('Telegram WebApp инициализирован');
-console.log('initData:', tg.initData);
+// Включаем расширенное логирование
+console.log('=== TELEGRAM WEBAPP DEBUG ===');
+console.log('Telegram WebApp доступен:', !!tg);
+console.log('sendData доступен:', !!tg.sendData);
 console.log('initDataUnsafe:', tg.initDataUnsafe);
-console.log('Пользователь:', tg.initDataUnsafe.user);
+console.log('=============================');
 
-// Инициализируем WebApp
+// Инициализация
 tg.expand();
 tg.ready();
 tg.setHeaderColor('#1e3c72');
@@ -54,7 +55,6 @@ const cardsData = [
 ];
 
 let selectedCard = null;
-let isFormSubmitted = false;
 
 // Элементы DOM
 const catalogScreen = document.getElementById('catalog-screen');
@@ -102,9 +102,9 @@ function setupEventListeners() {
     backFormButton.addEventListener('click', () => showScreen(detailsScreen));
     
     backToCatalogButton.addEventListener('click', () => {
+        // Не закрываем приложение, просто возвращаем в каталог
         showScreen(catalogScreen);
         orderForm.reset();
-        isFormSubmitted = false;
     });
     
     applyButton.addEventListener('click', () => openForm());
@@ -151,13 +151,10 @@ function openForm() {
 }
 
 // Обработка отправки формы
-async function handleFormSubmit(e) {
+function handleFormSubmit(e) {
     e.preventDefault();
     
-    if (isFormSubmitted) {
-        console.log('Форма уже отправлена');
-        return;
-    }
+    console.log('=== ОТПРАВКА ФОРМЫ ===');
     
     // Собираем данные
     const formData = {
@@ -166,7 +163,8 @@ async function handleFormSubmit(e) {
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
         city: document.getElementById('city').value,
-        additionalServices: []
+        additionalServices: [],
+        timestamp: new Date().toISOString()
     };
     
     if (selectedCard.id === 6) {
@@ -188,51 +186,39 @@ async function handleFormSubmit(e) {
         return;
     }
     
-    // Отмечаем как отправленную
-    isFormSubmitted = true;
+    console.log('Данные формы:', formData);
     
-    console.log('Данные для отправки:', formData);
-    
-    // Показываем экран успеха СРАЗУ
+    // Показываем экран успеха
     showScreen(successScreen);
     
     // Отправляем данные через Telegram WebApp
     if (tg && tg.sendData) {
         try {
             const dataString = JSON.stringify(formData);
-            console.log('Отправляем через tg.sendData:', dataString);
+            console.log('Отправляем строку JSON:', dataString);
             
-            // Отправляем данные
+            // КРИТИЧЕСКИ ВАЖНО: правильная отправка
             tg.sendData(dataString);
             
-            // Ждем 2 секунды и закрываем
-            setTimeout(() => {
-                console.log('Закрываем мини-приложение');
-                if (tg && tg.close) {
-                    tg.close();
-                }
-            }, 2000);
+            console.log('Данные отправлены через sendData()');
+            
+            // Не закрываем приложение сразу!
+            // Даем время на обработку данных
             
         } catch (error) {
             console.error('Ошибка отправки:', error);
-            // Все равно закрываем через 3 секунды
-            setTimeout(() => {
-                if (tg && tg.close) {
-                    tg.close();
-                }
-            }, 3000);
+            alert('Ошибка отправки заявки. Попробуйте еще раз.');
         }
     } else {
-        console.log('Telegram WebApp не доступен, тестовый режим');
-        console.log('Данные формы:', formData);
+        console.error('Telegram WebApp API не доступен!');
+        console.log('Данные для отправки:', formData);
         
-        // Для тестирования в браузере - просто закрываем
-        setTimeout(() => {
-            console.log('Закрываем (тестовый режим)');
-            alert('В реальном Telegram данные были бы отправлены');
-        }, 2000);
+        // Для отладки в браузере
+        if (window.location.protocol === 'file:') {
+            alert('Заявка отправлена (тестовый режим).\n\nДанные: ' + JSON.stringify(formData, null, 2));
+        }
     }
 }
 
-// Инициализация при загрузке
+// Инициализация
 document.addEventListener('DOMContentLoaded', initApp);
