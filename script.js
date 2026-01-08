@@ -1,224 +1,301 @@
-// Инициализация Telegram WebApp
+// Telegram WebApp Initialization
 const tg = window.Telegram.WebApp;
 
-// Включаем расширенное логирование
-console.log('=== TELEGRAM WEBAPP DEBUG ===');
-console.log('Telegram WebApp доступен:', !!tg);
-console.log('sendData доступен:', !!tg.sendData);
-console.log('initDataUnsafe:', tg.initDataUnsafe);
-console.log('=============================');
-
-// Инициализация
+// Initialize WebApp
 tg.expand();
 tg.ready();
-tg.setHeaderColor('#1e3c72');
-tg.setBackgroundColor('#f5f7fa');
+tg.setHeaderColor('#2C3E50');
+tg.setBackgroundColor('#F8F9FA');
 
-// Данные карточек
-const cardsData = [
+// Services Data
+const servicesData = [
     {
         id: 1,
         title: 'Морская прогулка на яхте',
-        image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-        description: 'Романтичная или семейная прогулка по Черному морю на современной яхте. Продолжительность 2-3 часа. Включены напитки и закуски. Великолепные виды на побережье.'
+        badge: 'Популярное',
+        image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        description: 'Эксклюзивная прогулка по Черному морю на современной яхте с капитаном. Включены напитки, закуски и рыбалка. Идеально для романтических свиданий и семейного отдыха.',
+        price: 'от 5 000₽',
+        features: ['Напитки включены', 'Рыбалка', 'Фотосессия']
     },
     {
         id: 2,
         title: 'Рафтинг по горной реке',
-        image: 'https://images.unsplash.com/photo-1606293458491-7b5d0fa49c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-        description: 'Экстремальный спуск по горной реке Мзымта. Подходит для новичков и опытных. Все необходимое снаряжение предоставляется. Инструктор сопровождает группу.'
+        badge: 'Экстрим',
+        image: 'https://images.unsplash.com/photo-1606293458491-7b5d0fa49c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        description: 'Экстремальный спуск по горной реке Мзымта с опытным инструктором. Все снаряжение предоставляется. Захватывающие виды и адреналин гарантированы!',
+        price: 'от 3 500₽',
+        features: ['Инструктор', 'Снаряжение', 'Трансфер']
     },
     {
         id: 3,
         title: 'Подъем на гору Ахун',
-        image: 'https://images.unsplash.com/photo-1627389955926-6c5f6d9976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-        description: 'Автомобильно-пешеходная экскурсия на гору Ахун со смотровой башней. Панорамный вид на Сочи и море. Посещение Агурских водопадов.'
+        badge: 'Экскурсия',
+        image: 'https://images.unsplash.com/photo-1627389955926-6c5f6d9976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        description: 'Автомобильно-пешеходная экскурсия на самую высокую точку Сочи. Смотровая башня, Агурские водопады, панорамные виды на море и горы.',
+        price: 'от 2 800₽',
+        features: ['Гид', 'Транспорт', 'Билеты']
     },
     {
         id: 4,
         title: 'Джиппинг в горах',
-        image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-        description: 'Захватывающее путешествие на внедорожниках по горным тропам Красной Поляны. Посещение труднодоступных мест и водопадов.'
+        badge: 'Приключение',
+        image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        description: 'Захватывающее путешествие на внедорожниках по горным тропам Красной Поляны. Посещение труднодоступных мест, водопадов и смотровых площадок.',
+        price: 'от 4 500₽',
+        features: ['Внедорожник', 'Водитель', 'Экскурсия']
     },
     {
         id: 5,
         title: 'Дегустация вин',
-        image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-        description: 'Экскурсия на винодельню Абрау-Дюрсо с дегустацией лучших местных вин. Рассказ о процессе производства и истории виноделия.'
+        badge: 'Гастрономия',
+        image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        description: 'Экскурсия на винодельню Абрау-Дюрсо с дегустацией 5 видов лучших местных вин. Рассказ о процессе производства и истории виноделия.',
+        price: 'от 3 200₽',
+        features: ['5 видов вин', 'Сомелье', 'Закуски']
     },
     {
         id: 6,
         title: 'Индивидуальный заказ',
-        image: 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-        description: 'Соберите свой уникальный тур! Выберите желаемые активности (можно несколько), укажите предпочтения и даты. Мы составим персональное предложение.'
+        badge: 'Премиум',
+        image: 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        description: 'Создайте свой уникальный тур! Комбинируйте любые активности, выбирайте даты и дополнительные услуги. Персональный подход.',
+        price: 'по запросу',
+        features: ['Индивидуально', 'Гибкий график', 'Все включено']
     }
 ];
 
-let selectedCard = null;
+// State
+let selectedService = null;
 
-// Элементы DOM
-const catalogScreen = document.getElementById('catalog-screen');
-const detailsScreen = document.getElementById('details-screen');
-const formScreen = document.getElementById('form-screen');
-const successScreen = document.getElementById('success-screen');
-const cardsContainer = document.getElementById('cards-container');
-const backButton = document.getElementById('back-button');
-const backFormButton = document.getElementById('back-form-button');
-const backToCatalogButton = document.getElementById('back-to-catalog');
-const detailsImage = document.getElementById('details-image');
-const detailsTitle = document.getElementById('details-title');
-const detailsDescription = document.getElementById('details-description');
-const applyButton = document.getElementById('apply-button');
-const formTitle = document.getElementById('form-title');
-const orderForm = document.getElementById('order-form');
-const customOrderGroup = document.getElementById('custom-order-group');
-const supportLink = document.getElementById('support-link');
+// DOM Elements
+const screens = {
+    catalog: document.getElementById('catalog-screen'),
+    details: document.getElementById('details-screen'),
+    form: document.getElementById('form-screen'),
+    success: document.getElementById('success-screen')
+};
 
-// Инициализация приложения
+const elements = {
+    cardsContainer: document.getElementById('cards-container'),
+    backButton: document.getElementById('back-button'),
+    backFormButton: document.getElementById('back-form-button'),
+    backToCatalog: document.getElementById('back-to-catalog'),
+    detailsImage: document.getElementById('details-image'),
+    serviceBadge: document.getElementById('service-badge'),
+    detailsTitle: document.getElementById('details-title'),
+    detailsDescription: document.getElementById('details-description'),
+    applyButton: document.getElementById('apply-button'),
+    formTitle: document.getElementById('form-title'),
+    orderForm: document.getElementById('order-form'),
+    customOrderSection: document.getElementById('custom-order-section'),
+    supportLink: document.getElementById('support-link'),
+    faqLink: document.getElementById('faq-link'),
+    loadingOverlay: document.getElementById('loading-overlay')
+};
+
+// Initialize App
 function initApp() {
-    renderCards();
+    renderServices();
     setupEventListeners();
-    console.log('Приложение инициализировано');
+    console.log('TRAVEL SOCHI App initialized');
 }
 
-// Отрисовка карточек
-function renderCards() {
-    cardsContainer.innerHTML = '';
-    cardsData.forEach(card => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card';
-        cardElement.innerHTML = `
-            <img src="${card.image}" alt="${card.title}" class="card-image">
-            <div class="card-label">${card.title}</div>
+// Render Services Cards
+function renderServices() {
+    elements.cardsContainer.innerHTML = '';
+    
+    servicesData.forEach(service => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="card-image-container">
+                <img src="${service.image}" alt="${service.title}" class="card-image" 
+                     onerror="this.src='https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                ${service.badge ? `<div class="card-badge">${service.badge}</div>` : ''}
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">${service.title}</h3>
+                <p class="card-description">${service.description.substring(0, 100)}...</p>
+                <div class="card-price">${service.price}</div>
+                <div class="card-features">
+                    ${service.features.map(feature => `
+                        <span class="feature-tag">
+                            <i class="fas fa-check"></i> ${feature}
+                        </span>
+                    `).join('')}
+                </div>
+            </div>
         `;
-        cardElement.addEventListener('click', () => openCardDetails(card));
-        cardsContainer.appendChild(cardElement);
+        
+        card.addEventListener('click', () => showServiceDetails(service));
+        elements.cardsContainer.appendChild(card);
     });
 }
 
-// Настройка обработчиков событий
+// Setup Event Listeners
 function setupEventListeners() {
-    backButton.addEventListener('click', () => showScreen(catalogScreen));
-    backFormButton.addEventListener('click', () => showScreen(detailsScreen));
-    
-    backToCatalogButton.addEventListener('click', () => {
-        // Не закрываем приложение, просто возвращаем в каталог
-        showScreen(catalogScreen);
-        orderForm.reset();
+    // Navigation
+    elements.backButton.addEventListener('click', () => showScreen('catalog'));
+    elements.backFormButton.addEventListener('click', () => showScreen('details'));
+    elements.backToCatalog.addEventListener('click', () => {
+        elements.orderForm.reset();
+        showScreen('catalog');
     });
     
-    applyButton.addEventListener('click', () => openForm());
-    
-    orderForm.addEventListener('submit', handleFormSubmit);
-    
-    supportLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (tg && tg.openTelegramLink) {
-            tg.openTelegramLink('https://t.me/ChkaSencBan');
+    // Apply Button
+    elements.applyButton.addEventListener('click', () => {
+        if (selectedService) {
+            showScreen('form');
         }
     });
-}
-
-// Показать экран
-function showScreen(screen) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    screen.classList.add('active');
-}
-
-// Открыть детали карточки
-function openCardDetails(card) {
-    selectedCard = card;
-    detailsImage.src = card.image;
-    detailsImage.alt = card.title;
-    detailsTitle.textContent = card.title;
-    detailsDescription.textContent = card.description;
-    showScreen(detailsScreen);
-}
-
-// Открыть форму заявки
-function openForm() {
-    formTitle.textContent = selectedCard.title;
     
-    if (selectedCard.id === 6) {
-        customOrderGroup.style.display = 'block';
-        document.getElementById('custom-order').required = true;
-    } else {
-        customOrderGroup.style.display = 'none';
-        document.getElementById('custom-order').required = false;
+    // Form Submission
+    elements.orderForm.addEventListener('submit', handleFormSubmit);
+    
+    // Links
+    elements.supportLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        tg.openTelegramLink('https://t.me/ChkaSencBan');
+    });
+    
+    elements.faqLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showFAQ();
+    });
+}
+
+// Show Screen
+function showScreen(screenName) {
+    Object.values(screens).forEach(screen => screen.classList.remove('active'));
+    screens[screenName].classList.add('active');
+    
+    // Update form title when showing form
+    if (screenName === 'form' && selectedService) {
+        elements.formTitle.textContent = selectedService.title;
+        
+        // Show/hide custom order section
+        if (selectedService.id === 6) {
+            elements.customOrderSection.style.display = 'block';
+            document.getElementById('custom-order').required = true;
+        } else {
+            elements.customOrderSection.style.display = 'none';
+            document.getElementById('custom-order').required = false;
+        }
     }
-    
-    showScreen(formScreen);
 }
 
-// Обработка отправки формы
-function handleFormSubmit(e) {
+// Show Service Details
+function showServiceDetails(service) {
+    selectedService = service;
+    
+    elements.detailsImage.src = service.image;
+    elements.serviceBadge.textContent = service.badge;
+    elements.detailsTitle.textContent = service.title;
+    elements.detailsDescription.textContent = service.description;
+    
+    showScreen('details');
+}
+
+// Show FAQ
+function showFAQ() {
+    alert(`🤔 Частые вопросы:
+
+Q: Сколько времени занимает обработка заявки?
+A: Мы связываемся в течение 15 минут
+
+Q: Можно ли изменить заявку?
+A: Да, сообщите менеджеру при звонке
+
+Q: Есть ли скидки?
+A: Да, при заказе от 3-х услуг
+
+Q: Как оплатить?
+A: Наличными или переводом
+
+Нужна помощь? Пишите в поддержку!`);
+}
+
+// Handle Form Submission
+async function handleFormSubmit(e) {
     e.preventDefault();
     
-    console.log('=== ОТПРАВКА ФОРМЫ ===');
+    // Show loading
+    elements.loadingOverlay.classList.add('active');
     
-    // Собираем данные
+    // Collect form data
     const formData = {
-        service: selectedCard.title,
+        service: selectedService.title,
         people: document.getElementById('people').value,
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
         city: document.getElementById('city').value,
+        preferredDate: document.getElementById('preferred-date').value || 'Не указано',
         additionalServices: [],
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toLocaleString('ru-RU')
     };
     
-    if (selectedCard.id === 6) {
+    // Custom order
+    if (selectedService.id === 6) {
         formData.customOrder = document.getElementById('custom-order').value;
     }
     
+    // Additional services
     document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
         formData.additionalServices.push(checkbox.value);
     });
     
-    // Валидация
+    // Validation
     if (!formData.people || !formData.name || !formData.phone || !formData.city) {
         alert('Заполните все обязательные поля (*)');
+        elements.loadingOverlay.classList.remove('active');
         return;
     }
     
-    if (selectedCard.id === 6 && !formData.customOrder) {
-        alert('Опишите ваш индивидуальный заказ');
+    if (selectedService.id === 6 && !formData.customOrder) {
+        alert('Пожалуйста, опишите ваш индивидуальный заказ');
+        elements.loadingOverlay.classList.remove('active');
         return;
     }
     
-    console.log('Данные формы:', formData);
+    console.log('Отправка заявки:', formData);
     
-    // Показываем экран успеха
-    showScreen(successScreen);
-    
-    // Отправляем данные через Telegram WebApp
-    if (tg && tg.sendData) {
-        try {
+    try {
+        // Send data to Telegram bot
+        if (tg && tg.sendData) {
             const dataString = JSON.stringify(formData);
-            console.log('Отправляем строку JSON:', dataString);
-            
-            // КРИТИЧЕСКИ ВАЖНО: правильная отправка
             tg.sendData(dataString);
-            
-            console.log('Данные отправлены через sendData()');
-            
-            // Не закрываем приложение сразу!
-            // Даем время на обработку данных
-            
-        } catch (error) {
-            console.error('Ошибка отправки:', error);
-            alert('Ошибка отправки заявки. Попробуйте еще раз.');
+            console.log('Данные отправлены через Telegram WebApp');
         }
-    } else {
-        console.error('Telegram WebApp API не доступен!');
-        console.log('Данные для отправки:', formData);
         
-        // Для отладки в браузере
-        if (window.location.protocol === 'file:') {
-            alert('Заявка отправлена (тестовый режим).\n\nДанные: ' + JSON.stringify(formData, null, 2));
-        }
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Show success
+        showScreen('success');
+        
+        // Close mini-app after 3 seconds
+        setTimeout(() => {
+            if (tg && tg.close) {
+                tg.close();
+            }
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Ошибка отправки:', error);
+        alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.');
+    } finally {
+        elements.loadingOverlay.classList.remove('active');
     }
 }
 
-// Инициализация
+// Initialize on load
 document.addEventListener('DOMContentLoaded', initApp);
+
+// Error handling for images
+document.addEventListener('error', function(e) {
+    if (e.target.tagName === 'IMG') {
+        console.error('Ошибка загрузки изображения:', e.target.src);
+        e.target.src = 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    }
+}, true);
