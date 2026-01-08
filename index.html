@@ -1,50 +1,87 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>TRAVEL SOCHI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Telegram SDK -->
+  <meta charset="UTF-8">
+  <title>Travel Sochi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script defer src="script.js"></script>
 
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 800;
+      margin: 20px 0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .card {
+      position: relative;
+      height: 200px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .label {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.6);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    input, button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      font-weight: 700;
+    }
+  </style>
 </head>
 <body>
 
-  <header class="header">
-    TRAVEL SOCHI
-  </header>
+<h1>🌴 TRAVEL SOCHI</h1>
 
-  <main class="cards">
+<div id="app"></div>
 
-    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee')"
-         onclick="selectCategory('Джиппинг')">
-      <span>Джиппинг</span>
-    </div>
-
-    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"
-         onclick="selectCategory('Абхазия')">
-      <span>Абхазия</span>
-    </div>
-
-    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"
-         onclick="selectCategory('Яхта')">
-      <span>Яхта</span>
-    </div>
-
-    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470')"
-         onclick="selectCategory('Горы')">
-      <span>Горы</span>
-    </div>
-
-    <div class="card" style="background-image:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429')"
-         onclick="selectCategory('Индивидуальный маршрут')">
-      <span>Индивидуальный маршрут</span>
-    </div>
-
-  </main>
-
-  <script src="script.js"></script>
 </body>
 </html>
