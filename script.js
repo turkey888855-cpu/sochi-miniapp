@@ -1,41 +1,66 @@
-const tg = window.Telegram.WebApp;
+const tg = Telegram.WebApp;
 tg.expand();
 
-const tours = {
-  "Джиппинг": {
-    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-    description: "Горы, водопады, оффроуд, драйв и лучшие виды Сочи."
-  },
-  "Абхазия": {
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-    description: "Озеро Рица, Гагра, Новый Афон и горные пейзажи."
-  },
-  "Яхта": {
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-    description: "Морская прогулка, закат, купание и фото."
-  }
-};
+const app = document.getElementById("app");
 
-function selectCategory(category) {
-  localStorage.setItem("tour", category);
-  window.location.href = "tour.html";
+const categories = [
+  { name: "Яхта", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e" },
+  { name: "Горы", img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470" },
+  { name: "Джиппинг", img: "https://images.unsplash.com/photo-1526676037777-05a232554f77" },
+  { name: "Водопады", img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9" },
+  { name: "Индивидуальный заказ", img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" }
+];
+
+let selectedCategory = "";
+
+function showCatalog() {
+  app.innerHTML = `
+    <div class="cards">
+      ${categories.map(c => `
+        <div class="card" onclick="openCategory('${c.name}')">
+          <img src="${c.img}">
+          <div class="label">${c.name}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
 }
 
-if (window.location.pathname.includes("tour.html")) {
-  const tour = localStorage.getItem("tour");
-  document.getElementById("tourTitle").innerText = tour;
-  document.getElementById("tourDescription").innerText = tours[tour].description;
-  document.getElementById("tourImage").style.backgroundImage =
-    `url(${tours[tour].image})`;
+function openCategory(name) {
+  selectedCategory = name;
+
+  app.innerHTML = `
+    <div class="content">
+      <p>${name} — один из самых популярных видов отдыха в Сочи и Адлере.</p>
+      <button onclick="openForm()">Оставить заявку</button>
+    </div>
+  `;
+}
+
+function openForm() {
+  app.innerHTML = `
+    <div class="content">
+      <input id="name" placeholder="Имя Фамилия">
+      <input id="phone" placeholder="+7 999 123-45-67">
+      <input id="city" placeholder="Город (Адлер / Сочи)">
+      <input id="people" placeholder="Количество человек">
+      <button onclick="sendOrder()">Отправить заявку</button>
+    </div>
+  `;
 }
 
 function sendOrder() {
-  const tour = localStorage.getItem("tour");
+  const data = {
+    category: selectedCategory,
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    city: document.getElementById("city").value,
+    people: document.getElementById("people").value
+  };
 
-  tg.sendData(JSON.stringify({
-    action: "order",
-    tour: tour
-  }));
-
+  tg.sendData(JSON.stringify(data));
   tg.close();
 }
+
+showCatalog();
+
