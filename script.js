@@ -1,13 +1,17 @@
 // Инициализация Telegram WebApp
 const tg = window.Telegram.WebApp;
 
-// Инициализируем WebApp
-tg.expand(); // Развернуть приложение на весь экран
-tg.ready(); // Говорим Telegram, что приложение готово
-tg.setHeaderColor('#1e3c72'); // Цвет шапки в стиле бренда
-tg.setBackgroundColor('#f5f7fa');
+// Включаем логирование
+console.log('Telegram WebApp инициализирован');
+console.log('initData:', tg.initData);
+console.log('initDataUnsafe:', tg.initDataUnsafe);
+console.log('Пользователь:', tg.initDataUnsafe.user);
 
-console.log('Telegram WebApp инициализирован:', tg.initDataUnsafe);
+// Инициализируем WebApp
+tg.expand();
+tg.ready();
+tg.setHeaderColor('#1e3c72');
+tg.setBackgroundColor('#f5f7fa');
 
 // Данные карточек
 const cardsData = [
@@ -49,8 +53,8 @@ const cardsData = [
     }
 ];
 
-// Текущий выбранный отдых
 let selectedCard = null;
+let isFormSubmitted = false;
 
 // Элементы DOM
 const catalogScreen = document.getElementById('catalog-screen');
@@ -100,6 +104,7 @@ function setupEventListeners() {
     backToCatalogButton.addEventListener('click', () => {
         showScreen(catalogScreen);
         orderForm.reset();
+        isFormSubmitted = false;
     });
     
     applyButton.addEventListener('click', () => openForm());
@@ -108,11 +113,13 @@ function setupEventListeners() {
     
     supportLink.addEventListener('click', (e) => {
         e.preventDefault();
-        tg.openTelegramLink('https://t.me/ChkaSencBan');
+        if (tg && tg.openTelegramLink) {
+            tg.openTelegramLink('https://t.me/ChkaSencBan');
+        }
     });
 }
 
-// Показать определенный экран
+// Показать экран
 function showScreen(screen) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     screen.classList.add('active');
@@ -144,10 +151,15 @@ function openForm() {
 }
 
 // Обработка отправки формы
-function handleFormSubmit(e) {
+async function handleFormSubmit(e) {
     e.preventDefault();
     
-    // Собираем данные формы
+    if (isFormSubmitted) {
+        console.log('Форма уже отправлена');
+        return;
+    }
+    
+    // Собираем данные
     const formData = {
         service: selectedCard.title,
         people: document.getElementById('people').value,
@@ -157,50 +169,70 @@ function handleFormSubmit(e) {
         additionalServices: []
     };
     
-    // Если индивидуальный заказ
     if (selectedCard.id === 6) {
         formData.customOrder = document.getElementById('custom-order').value;
     }
     
-    // Собираем выбранные дополнительные услуги
     document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
         formData.additionalServices.push(checkbox.value);
     });
     
-    // Проверка обязательных полей
+    // Валидация
     if (!formData.people || !formData.name || !formData.phone || !formData.city) {
-        alert('Пожалуйста, заполните все обязательные поля (отмечены *)');
+        alert('Заполните все обязательные поля (*)');
         return;
     }
     
     if (selectedCard.id === 6 && !formData.customOrder) {
-        alert('Пожалуйста, опишите ваш индивидуальный заказ');
+        alert('Опишите ваш индивидуальный заказ');
         return;
     }
     
-    console.log('Отправляем данные:', formData);
+    // Отмечаем как отправленную
+    isFormSubmitted = true;
     
-    // КРИТИЧЕСКИ ВАЖНО: отправляем данные в Telegram
+    console.log('Данные для отправки:', formData);
+    
+    // Показываем экран успеха СРАЗУ
+    showScreen(successScreen);
+    
+    // Отправляем данные через Telegram WebApp
     if (tg && tg.sendData) {
-        // Telegram требует строку JSON
-        const dataString = JSON.stringify(formData);
-        console.log('Отправка данных через Telegram WebApp:', dataString);
-        
-        // Отправляем данные
-        tg.sendData(dataString);
-        
-        // Закрываем мини-приложение после отправки
-        setTimeout(() => {
-            tg.close();
-        }, 1000);
-        
-        // Показываем экран успеха
-        showScreen(successScreen);
+        try {
+            const dataString = JSON.stringify(formData);
+            console.log('Отправляем через tg.sendData:', dataString);
+            
+            // Отправляем данные
+            tg.sendData(dataString);
+            
+            // Ждем 2 секунды и закрываем
+            setTimeout(() => {
+                console.log('Закрываем мини-приложение');
+                if (tg && tg.close) {
+                    tg.close();
+                }
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Ошибка отправки:', error);
+            // Все равно закрываем через 3 секунды
+            setTimeout(() => {
+                if (tg && tg.close) {
+                    tg.close();
+                }
+            }, 3000);
+        }
     } else {
-        console.error('Telegram WebApp не доступен');
-        alert('Ошибка: Откройте приложение через Telegram бота');
+        console.log('Telegram WebApp не доступен, тестовый режим');
+        console.log('Данные формы:', formData);
+        
+        // Для тестирования в браузере - просто закрываем
+        setTimeout(() => {
+            console.log('Закрываем (тестовый режим)');
+            alert('В реальном Telegram данные были бы отправлены');
+        }, 2000);
     }
 }
 
-// Инициализация приложения
+// Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', initApp);
