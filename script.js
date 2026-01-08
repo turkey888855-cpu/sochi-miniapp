@@ -1,5 +1,3 @@
-
-
 // Инициализация Telegram WebApp
 const tg = window.Telegram.WebApp;
 tg.expand(); // Развернуть приложение на весь экран
@@ -69,13 +67,16 @@ const supportLink = document.getElementById('support-link');
 
 // Инициализация приложения
 function initApp() {
+    console.log('Инициализация приложения...');
     renderCards();
     setupEventListeners();
 }
 
 // Отрисовка карточек
 function renderCards() {
+    console.log('Отрисовка карточек...');
     cardsContainer.innerHTML = '';
+    
     cardsData.forEach(card => {
         const cardElement = document.createElement('div');
         cardElement.className = 'card';
@@ -86,10 +87,14 @@ function renderCards() {
         cardElement.addEventListener('click', () => openCardDetails(card));
         cardsContainer.appendChild(cardElement);
     });
+    
+    console.log(`Отрисовано ${cardsData.length} карточек`);
 }
 
 // Настройка обработчиков событий
 function setupEventListeners() {
+    console.log('Настройка обработчиков событий...');
+    
     // Кнопка "Назад" в деталях
     backButton.addEventListener('click', () => {
         showScreen(catalogScreen);
@@ -118,7 +123,12 @@ function setupEventListeners() {
     // Ссылка на тех. поддержку
     supportLink.addEventListener('click', (e) => {
         e.preventDefault();
-        tg.openTelegramLink('https://t.me/your_support_bot'); // Замените на ссылку вашего бота поддержки
+        // Используем метод Telegram WebApp для открытия ссылки
+        if (tg && tg.openLink) {
+            tg.openLink('https://t.me/ChkaSencBan');
+        } else {
+            window.open('https://t.me/ChkaSencBan', '_blank');
+        }
     });
 }
 
@@ -130,6 +140,7 @@ function showScreen(screen) {
 
 // Открыть детали карточки
 function openCardDetails(card) {
+    console.log('Открытие деталей карточки:', card.title);
     selectedCard = card;
     detailsImage.src = card.image;
     detailsImage.alt = card.title;
@@ -140,6 +151,7 @@ function openCardDetails(card) {
 
 // Открыть форму заявки
 function openForm() {
+    console.log('Открытие формы для:', selectedCard.title);
     formTitle.textContent = selectedCard.title;
     
     // Если выбран "Индивидуальный заказ", показываем текстовое поле
@@ -157,6 +169,7 @@ function openForm() {
 // Обработка отправки формы
 function handleFormSubmit(e) {
     e.preventDefault();
+    console.log('Отправка формы...');
     
     // Собираем данные формы
     const formData = {
@@ -165,52 +178,58 @@ function handleFormSubmit(e) {
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
         city: document.getElementById('city').value,
-        customOrder: selectedCard.id === 6 ? document.getElementById('custom-order').value : null,
         additionalServices: []
     };
+    
+    // Если индивидуальный заказ - добавляем описание
+    if (selectedCard.id === 6) {
+        formData.customOrder = document.getElementById('custom-order').value;
+    }
     
     // Собираем выбранные дополнительные услуги
     document.querySelectorAll('.service-checkbox:checked').forEach(checkbox => {
         formData.additionalServices.push(checkbox.value);
     });
     
-    // В реальном приложении здесь бы отправлялись данные на ваш сервер
-    // Для демонстрации имитируем отправку через Telegram WebApp
+    // Проверка обязательных полей
+    if (!formData.people || !formData.name || !formData.phone || !formData.city) {
+        alert('Пожалуйста, заполните все обязательные поля (отмечены *)');
+        return;
+    }
     
-    // Сообщение для группы гидов (форматированное)
-    const guideMessage = `
-🆕 НОВАЯ ЗАЯВКА
-
-📍 Город: ${formData.city}
-👤 Клиент: ${formData.name}
-📞 Телефон: ${formData.phone}
-👥 Количество человек: ${formData.people}
-🎯 Услуга: ${formData.service}
-${formData.customOrder ? `📝 Индивидуальный заказ: ${formData.customOrder}\n` : ''}
-${formData.additionalServices.length > 0 ? `➕ Доп. услуги: ${formData.additionalServices.join(', ')}\n` : ''}
-🕐 Дата и время заявки: ${new Date().toLocaleString('ru-RU')}
-    `.trim();
+    // Если индивидуальный заказ без описания
+    if (selectedCard.id === 6 && !formData.customOrder) {
+        alert('Пожалуйста, опишите ваш индивидуальный заказ');
+        return;
+    }
     
-    // Отправляем данные через Telegram WebApp (в реальности - на ваш сервер)
-    // tg.sendData(JSON.stringify(formData)); // Раскомментировать при наличии бэкенда
+    console.log('Данные для отправки:', formData);
     
-    // В данном примере просто показываем сообщение в консоли
-    console.log('Данные заявки:', formData);
-    console.log('Сообщение для гидов:', guideMessage);
+    // Отправляем данные в Telegram бота
+    if (tg && tg.sendData) {
+        tg.sendData(JSON.stringify(formData));
+        console.log('Данные отправлены через Telegram WebApp');
+    } else {
+        console.log('Telegram WebApp не доступен, данные:', formData);
+        // Для отладки в браузере
+        alert('В режиме отладки: данные формы: ' + JSON.stringify(formData, null, 2));
+    }
     
     // Показываем экран успеха
     showScreen(successScreen);
-    
-    // В реальном приложении здесь бы был код для отправки данных на сервер
-    // и последующей отправки сообщений через Bot API
-    
-    // Имитация работы: через 3 секунды "бот" отправляет сообщение о принятии заявки
-    // (В реальности это сделает ваш сервер через Bot API)
-    setTimeout(() => {
-        console.log('[Имитация] Бот отправляет сообщение клиенту: "Заявка принята! Скоро с вами свяжется исполнитель."');
-        console.log('[Имитация] Бот отправляет заявку в группу гидов.');
-    }, 1000);
 }
 
 // Инициализация приложения при загрузке страницы
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM загружен, инициализация...');
+    initApp();
+});
+
+// Обработка ошибок загрузки изображений
+document.addEventListener('error', function(e) {
+    if (e.target.tagName === 'IMG') {
+        console.error('Ошибка загрузки изображения:', e.target.src);
+        // Запасное изображение
+        e.target.src = 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+    }
+}, true);
