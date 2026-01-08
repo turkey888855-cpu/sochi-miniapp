@@ -57,3 +57,33 @@ body {
 .card:hover {
   transform: scale(1.02);
 }
+.tour-hero {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.tour-hero h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.tour-content {
+  padding: 16px;
+}
+
+.order-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 14px;
+  border: none;
+  background: #0088cc;
+  color: white;
+}
+
