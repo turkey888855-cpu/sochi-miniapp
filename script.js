@@ -51,6 +51,7 @@ function openForm() {
 
 function sendOrder() {
   const data = {
+    action: "order",
     category: selectedCategory,
     name: document.getElementById("name").value,
     phone: document.getElementById("phone").value,
@@ -58,9 +59,7 @@ function sendOrder() {
     people: document.getElementById("people").value
   };
 
-  tg.sendData(JSON.stringify(data));
-  tg.close();
+  // ОБЯЗАТЕЛЬНО
+  Telegram.WebApp.sendData(JSON.stringify(data));
 }
-
-showCatalog();
 
