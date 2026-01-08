@@ -5,123 +5,253 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌴 TRAVEL SOCHI</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем красивый шрифт Roboto -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Иконки для кнопок -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Подключаем Telegram WebApp SDK -->
+    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Верхний бар с логотипом -->
+        <!-- Header -->
         <header class="app-header">
-            <div class="logo">
-                <span class="logo-icon">🌴</span>
-                <h1 class="logo-text">TRAVEL SOCHI</h1>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">🌴</div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">TRAVEL SOCHI</h1>
+                        <p class="logo-subtitle">Премиум отдых в Сочи</p>
+                    </div>
+                </div>
+                <div class="header-tagline">
+                    <p><i class="fas fa-star"></i> Оставьте заявку на идеальный отдых</p>
+                </div>
             </div>
-            <p class="tagline">Оставьте заявку на ваш идеальный отдых в Адлере и Сочи!</p>
         </header>
 
-        <!-- Основной контент -->
+        <!-- Main Content -->
         <main class="main-content">
-            <!-- Экран 1: Каталог карточек -->
+            <!-- Screen 1: Catalog -->
             <section id="catalog-screen" class="screen active">
-                <h2>Выберите вид отдыха или услугу</h2>
+                <div class="screen-header">
+                    <h2><i class="fas fa-compass"></i> Выберите вид отдыха</h2>
+                    <p class="screen-subtitle">Нажмите на карточку для подробностей</p>
+                </div>
                 <div class="cards-container" id="cards-container">
-                    <!-- Карточки будут сгенерированы скриптом -->
+                    <!-- Cards will be inserted by JavaScript -->
                 </div>
             </section>
 
-            <!-- Экран 2: Детали выбранной карточки -->
+            <!-- Screen 2: Details -->
             <section id="details-screen" class="screen">
                 <button class="back-button" id="back-button">
-                    <i class="fas fa-arrow-left"></i> Назад
+                    <i class="fas fa-chevron-left"></i> Назад
                 </button>
-                <div class="details-card">
-                    <img id="details-image" src="" alt="Отдых">
+                <div class="details-container">
+                    <div class="details-image-container">
+                        <img id="details-image" src="" alt="Отдых">
+                        <div class="image-overlay"></div>
+                    </div>
                     <div class="details-content">
+                        <div class="service-badge" id="service-badge"></div>
                         <h3 id="details-title"></h3>
-                        <p id="details-description"></p>
-                        <button class="btn-primary" id="apply-button">Оставить заявку</button>
+                        <div class="details-info">
+                            <p><i class="fas fa-info-circle"></i> Описание услуги:</p>
+                            <p id="details-description"></p>
+                        </div>
+                        <div class="details-features">
+                            <div class="feature">
+                                <i class="fas fa-clock"></i>
+                                <span>2-8 часов</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-user-group"></i>
+                                <span>1-15 человек</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-car"></i>
+                                <span>Трансфер включен</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary btn-action" id="apply-button">
+                            <i class="fas fa-paper-plane"></i> Оставить заявку
+                        </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Экран 3: Форма заявки -->
+            <!-- Screen 3: Order Form -->
             <section id="form-screen" class="screen">
                 <button class="back-button" id="back-form-button">
-                    <i class="fas fa-arrow-left"></i> Назад
+                    <i class="fas fa-chevron-left"></i> Назад
                 </button>
                 <div class="form-container">
-                    <h3>Заявка на: <span id="form-title"></span></h3>
+                    <div class="form-header">
+                        <h3><i class="fas fa-file-alt"></i> Заявка на услугу</h3>
+                        <p class="service-name" id="form-title"></p>
+                    </div>
+                    
                     <form id="order-form">
-                        <div class="form-group">
-                            <label for="people">Количество человек *</label>
-                            <input type="number" id="people" min="1" max="20" required placeholder="Например: 2">
+                        <!-- Основные данные -->
+                        <div class="form-section">
+                            <h4><i class="fas fa-user-check"></i> Основные данные</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="people"><i class="fas fa-users"></i> Количество человек *</label>
+                                    <input type="number" id="people" min="1" max="20" required 
+                                           placeholder="Например: 2">
+                                </div>
+                                <div class="form-group">
+                                    <label for="name"><i class="fas fa-user"></i> Имя и фамилия *</label>
+                                    <input type="text" id="name" required 
+                                           placeholder="Например: Иван Иванов">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone"><i class="fas fa-phone"></i> Номер телефона *</label>
+                                    <input type="tel" id="phone" required 
+                                           placeholder="Например: +7 999 123 45 67">
+                                </div>
+                                <div class="form-group">
+                                    <label for="city"><i class="fas fa-city"></i> Город *</label>
+                                    <select id="city" required>
+                                        <option value="" disabled selected>Выберите город</option>
+                                        <option value="Адлер">Адлер</option>
+                                        <option value="Сочи">Сочи</option>
+                                        <option value="Красная Поляна">Красная Поляна</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="name">Имя и фамилия *</label>
-                            <input type="text" id="name" required placeholder="Например: Иван Иванов">
+
+                        <!-- Индивидуальный заказ -->
+                        <div class="form-section" id="custom-order-section" style="display: none;">
+                            <h4><i class="fas fa-pen-nib"></i> Индивидуальный заказ</h4>
+                            <div class="form-group">
+                                <label for="custom-order">Опишите ваш заказ подробно *</label>
+                                <textarea id="custom-order" rows="4" 
+                                          placeholder="Например: Хочу комбинацию из морской прогулки и рафтинга на 2 дня. Добавьте встречу в аэропорту и водителя на весь период."></textarea>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="phone">Номер телефона *</label>
-                            <input type="tel" id="phone" required placeholder="Например: +7 999 123 45 67">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">Город *</label>
-                            <select id="city" required>
-                                <option value="" disabled selected>Выберите город</option>
-                                <option value="Адлер">Адлер</option>
-                                <option value="Сочи">Сочи</option>
-                            </select>
-                        </div>
-                        <!-- Поле для индивидуального заказа -->
-                        <div class="form-group" id="custom-order-group" style="display: none;">
-                            <label for="custom-order">Опишите ваш индивидуальный заказ *</label>
-                            <textarea id="custom-order" rows="3" placeholder="Например: Хочу комбинацию: прогулка на яхте + рафтинг. И добавьте встречу в аэропорту."></textarea>
-                        </div>
-                        <!-- Дополнительные услуги (для всех) -->
-                        <div class="form-group">
-                            <label>Дополнительные услуги (можно выбрать несколько):</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-label">
+
+                        <!-- Дополнительные услуги -->
+                        <div class="form-section">
+                            <h4><i class="fas fa-plus-circle"></i> Дополнительные услуги</h4>
+                            <div class="checkboxes-grid">
+                                <label class="checkbox-card">
                                     <input type="checkbox" class="service-checkbox" value="Встретить в аэропорту">
-                                    <span>Встретить в аэропорту (+2000₽)</span>
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-plane-arrival"></i>
+                                        <div class="checkbox-text">
+                                            <strong>Встретить в аэропорту</strong>
+                                            <span>+2000₽</span>
+                                        </div>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label">
+                                <label class="checkbox-card">
                                     <input type="checkbox" class="service-checkbox" value="Водитель на время отдыха">
-                                    <span>Водитель на время отдыха (+5000₽/день)</span>
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-car-side"></i>
+                                        <div class="checkbox-text">
+                                            <strong>Водитель на время отдыха</strong>
+                                            <span>+5000₽/день</span>
+                                        </div>
+                                    </div>
                                 </label>
-                                <label class="checkbox-label">
+                                <label class="checkbox-card">
                                     <input type="checkbox" class="service-checkbox" value="Персональный гид">
-                                    <span>Персональный гид на время отдыха (+3000₽/день)</span>
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-user-tie"></i>
+                                        <div class="checkbox-text">
+                                            <strong>Персональный гид</strong>
+                                            <span>+3000₽/день</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" class="service-checkbox" value="Фотосессия">
+                                    <div class="checkbox-content">
+                                        <i class="fas fa-camera"></i>
+                                        <div class="checkbox-text">
+                                            <strong>Профессиональная фотосессия</strong>
+                                            <span>+4000₽</span>
+                                        </div>
+                                    </div>
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" class="btn-primary">Отправить заявку</button>
+
+                        <!-- Дата и время -->
+                        <div class="form-section">
+                            <h4><i class="fas fa-calendar-alt"></i> Предпочтительная дата</h4>
+                            <div class="form-group">
+                                <label for="preferred-date">Желаемая дата (необязательно)</label>
+                                <input type="date" id="preferred-date">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-submit">
+                            <i class="fas fa-paper-plane"></i> Отправить заявку
+                        </button>
                     </form>
                 </div>
             </section>
 
-            <!-- Экран 4: Подтверждение отправки -->
+            <!-- Screen 4: Success -->
             <section id="success-screen" class="screen">
-                <div class="success-message">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Заявка принята!</h3>
-                    <p>Скоро с вами свяжется наш исполнитель для уточнения деталей.</p>
-                    <p>Ожидайте сообщение в этом чате.</p>
-                    <button class"btn-secondary" id="back-to-catalog">Вернуться в каталог</button>
+                <div class="success-container">
+                    <div class="success-animation">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="success-rings">
+                            <div class="ring ring-1"></div>
+                            <div class="ring ring-2"></div>
+                            <div class="ring ring-3"></div>
+                        </div>
+                    </div>
+                    <h3>Заявка принята! 🎉</h3>
+                    <p class="success-message">
+                        Спасибо за вашу заявку! Наш менеджер свяжется с вами в течение 15 минут для уточнения деталей.
+                    </p>
+                    <div class="success-details">
+                        <p><i class="fas fa-clock"></i> Время обработки: <strong>до 15 минут</strong></p>
+                        <p><i class="fas fa-comment"></i> Ожидайте сообщение в этом чате</p>
+                    </div>
+                    <button class="btn-secondary" id="back-to-catalog">
+                        <i class="fas fa-home"></i> Вернуться в каталог
+                    </button>
                 </div>
             </section>
         </main>
 
-        <!-- Нижний бар (футер) -->
+        <!-- Footer -->
         <footer class="app-footer">
-            <p>По всем вопросам обращайтесь в <a href="#" id="support-link">тех. поддержку</a></p>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#" id="support-link">
+                        <i class="fas fa-headset"></i> Техническая поддержка
+                    </a>
+                    <span class="footer-divider">•</span>
+                    <a href="#" id="faq-link">
+                        <i class="fas fa-question-circle"></i> Частые вопросы
+                    </a>
+                </div>
+                <p class="footer-copyright">
+                    © 2024 TRAVEL SOCHI. Все права защищены.
+                </p>
+            </div>
         </footer>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Отправка заявки...</p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
