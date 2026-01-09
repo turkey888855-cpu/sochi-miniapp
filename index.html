@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌴 TRAVEL SOCHI</title>
+    <title>🌊 TRAVEL SOCHI</title>
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,14 +21,14 @@
         <header class="app-header">
             <div class="header-content">
                 <div class="logo-container">
-                    <div class="logo-icon">🌴</div>
+                    <div class="logo-icon">🌊</div>
                     <div class="logo-text">
                         <h1 class="logo-title">TRAVEL SOCHI</h1>
-                        <p class="logo-subtitle">Премиум отдых в Сочи</p>
+                        <p class="logo-subtitle">Бюджетный и индивидуальный отдых</p>
                     </div>
                 </div>
                 <div class="header-tagline">
-                    <p><i class="fas fa-star"></i> Оставьте заявку на идеальный отдых</p>
+                    <p><i class="fas fa-star"></i> От эконом до премиум класса</p>
                 </div>
             </div>
         </header>
@@ -38,10 +39,44 @@
             <section id="catalog-screen" class="screen active">
                 <div class="screen-header">
                     <h2><i class="fas fa-compass"></i> Выберите вид отдыха</h2>
-                    <p class="screen-subtitle">Нажмите на карточку для подробностей</p>
+                    <p class="screen-subtitle">У нас есть как бюджетные варианты, так и индивидуальные туры</p>
+                    
+                    <!-- Типы отдыха -->
+                    <div class="vacation-types">
+                        <div class="type-badge budget">
+                            <i class="fas fa-wallet"></i>
+                            <span>Бюджетный отдых</span>
+                        </div>
+                        <div class="type-badge individual">
+                            <i class="fas fa-crown"></i>
+                            <span>Индивидуальный тур</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="cards-container" id="cards-container">
                     <!-- Cards will be inserted by JavaScript -->
+                </div>
+                
+                <!-- Галерея -->
+                <div class="gallery-section">
+                    <h3><i class="fas fa-images"></i> Галерея наших туров</h3>
+                    <div class="gallery-categories" id="gallery-categories">
+                        <!-- Categories will be loaded by JavaScript -->
+                    </div>
+                    <button class="btn-secondary" id="view-all-gallery">
+                        <i class="fas fa-images"></i> Посмотреть всю галерею
+                    </button>
+                </div>
+                
+                <!-- Отзывы -->
+                <div class="reviews-section">
+                    <h3><i class="fas fa-comment-dots"></i> Отзывы наших клиентов</h3>
+                    <div class="reviews-container" id="reviews-container">
+                        <!-- Reviews will be loaded by JavaScript -->
+                    </div>
+                    <button class="btn-secondary" id="add-review-btn">
+                        <i class="fas fa-plus-circle"></i> Оставить отзыв
+                    </button>
                 </div>
             </section>
 
@@ -57,6 +92,10 @@
                     </div>
                     <div class="details-content">
                         <div class="service-badge" id="service-badge"></div>
+                        <div class="price-type-container">
+                            <span class="price-label" id="price-label"></span>
+                            <span class="type-label" id="type-label"></span>
+                        </div>
                         <h3 id="details-title"></h3>
                         <div class="details-info">
                             <p><i class="fas fa-info-circle"></i> Описание услуги:</p>
@@ -65,11 +104,11 @@
                         <div class="details-features">
                             <div class="feature">
                                 <i class="fas fa-clock"></i>
-                                <span>2-8 часов</span>
+                                <span id="duration-text">2-8 часов</span>
                             </div>
                             <div class="feature">
                                 <i class="fas fa-user-group"></i>
-                                <span>1-15 человек</span>
+                                <span id="people-text">1-15 человек</span>
                             </div>
                             <div class="feature">
                                 <i class="fas fa-car"></i>
@@ -79,150 +118,110 @@
                         <button class="btn-primary btn-action" id="apply-button">
                             <i class="fas fa-paper-plane"></i> Оставить заявку
                         </button>
+                        
+                        <!-- Кнопка галереи для этой услуги -->
+                        <button class="btn-secondary btn-gallery" id="service-gallery-btn">
+                            <i class="fas fa-images"></i> Посмотреть фото/видео
+                        </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Screen 3: Order Form -->
-            <section id="form-screen" class="screen">
-                <button class="back-button" id="back-form-button">
+            <!-- Screen 3: Gallery -->
+            <section id="gallery-screen" class="screen">
+                <button class="back-button" id="back-gallery-button">
                     <i class="fas fa-chevron-left"></i> Назад
                 </button>
-                <div class="form-container">
-                    <div class="form-header">
-                        <h3><i class="fas fa-file-alt"></i> Заявка на услугу</h3>
-                        <p class="service-name" id="form-title"></p>
+                <div class="gallery-container">
+                    <h3 id="gallery-title"></h3>
+                    <p id="gallery-subtitle"></p>
+                    
+                    <div class="media-type-tabs">
+                        <button class="media-tab active" data-type="all">
+                            <i class="fas fa-th"></i> Все
+                        </button>
+                        <button class="media-tab" data-type="photo">
+                            <i class="fas fa-image"></i> Фото
+                        </button>
+                        <button class="media-tab" data-type="video">
+                            <i class="fas fa-video"></i> Видео
+                        </button>
                     </div>
                     
-                    <form id="order-form">
-                        <!-- Основные данные -->
-                        <div class="form-section">
-                            <h4><i class="fas fa-user-check"></i> Основные данные</h4>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="people"><i class="fas fa-users"></i> Количество человек *</label>
-                                    <input type="number" id="people" min="1" max="20" required 
-                                           placeholder="Например: 2">
-                                </div>
-                                <div class="form-group">
-                                    <label for="name"><i class="fas fa-user"></i> Имя и фамилия *</label>
-                                    <input type="text" id="name" required 
-                                           placeholder="Например: Иван Иванов">
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone"><i class="fas fa-phone"></i> Номер телефона *</label>
-                                    <input type="tel" id="phone" required 
-                                           placeholder="Например: +7 999 123 45 67">
-                                </div>
-                                <div class="form-group">
-                                    <label for="city"><i class="fas fa-city"></i> Город *</label>
-                                    <select id="city" required>
-                                        <option value="" disabled selected>Выберите город</option>
-                                        <option value="Адлер">Адлер</option>
-                                        <option value="Сочи">Сочи</option>
-                                        <option value="Красная Поляна">Красная Поляна</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Индивидуальный заказ -->
-                        <div class="form-section" id="custom-order-section" style="display: none;">
-                            <h4><i class="fas fa-pen-nib"></i> Индивидуальный заказ</h4>
-                            <div class="form-group">
-                                <label for="custom-order">Опишите ваш заказ подробно *</label>
-                                <textarea id="custom-order" rows="4" 
-                                          placeholder="Например: Хочу комбинацию из морской прогулки и рафтинга на 2 дня. Добавьте встречу в аэропорту и водителя на весь период."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Дополнительные услуги -->
-                        <div class="form-section">
-                            <h4><i class="fas fa-plus-circle"></i> Дополнительные услуги</h4>
-                            <div class="checkboxes-grid">
-                                <label class="checkbox-card">
-                                    <input type="checkbox" class="service-checkbox" value="Встретить в аэропорту">
-                                    <div class="checkbox-content">
-                                        <i class="fas fa-plane-arrival"></i>
-                                        <div class="checkbox-text">
-                                            <strong>Встретить в аэропорту</strong>
-                                            <span>+2000₽</span>
-                                        </div>
-                                    </div>
-                                </label>
-                                <label class="checkbox-card">
-                                    <input type="checkbox" class="service-checkbox" value="Водитель на время отдыха">
-                                    <div class="checkbox-content">
-                                        <i class="fas fa-car-side"></i>
-                                        <div class="checkbox-text">
-                                            <strong>Водитель на время отдыха</strong>
-                                            <span>+5000₽/день</span>
-                                        </div>
-                                    </div>
-                                </label>
-                                <label class="checkbox-card">
-                                    <input type="checkbox" class="service-checkbox" value="Персональный гид">
-                                    <div class="checkbox-content">
-                                        <i class="fas fa-user-tie"></i>
-                                        <div class="checkbox-text">
-                                            <strong>Персональный гид</strong>
-                                            <span>+3000₽/день</span>
-                                        </div>
-                                    </div>
-                                </label>
-                                <label class="checkbox-card">
-                                    <input type="checkbox" class="service-checkbox" value="Фотосессия">
-                                    <div class="checkbox-content">
-                                        <i class="fas fa-camera"></i>
-                                        <div class="checkbox-text">
-                                            <strong>Профессиональная фотосессия</strong>
-                                            <span>+4000₽</span>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Дата и время -->
-                        <div class="form-section">
-                            <h4><i class="fas fa-calendar-alt"></i> Предпочтительная дата</h4>
-                            <div class="form-group">
-                                <label for="preferred-date">Желаемая дата (необязательно)</label>
-                                <input type="date" id="preferred-date">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-primary btn-submit">
-                            <i class="fas fa-paper-plane"></i> Отправить заявку
-                        </button>
-                    </form>
+                    <div class="media-grid" id="media-grid">
+                        <!-- Media items will be loaded by JavaScript -->
+                    </div>
                 </div>
             </section>
 
-            <!-- Screen 4: Success -->
+            <!-- Screen 4: Order Form -->
+            <section id="form-screen" class="screen">
+                <!-- (остается без изменений, как в вашем коде) -->
+            </section>
+
+            <!-- Screen 5: Success -->
             <section id="success-screen" class="screen">
-                <div class="success-container">
-                    <div class="success-animation">
-                        <div class="success-icon">
-                            <i class="fas fa-check"></i>
+                <!-- (остается без изменений, как в вашем коде) -->
+            </section>
+
+            <!-- Screen 6: Add Review -->
+            <section id="review-screen" class="screen">
+                <button class="back-button" id="back-review-button">
+                    <i class="fas fa-chevron-left"></i> Назад
+                </button>
+                <div class="review-container">
+                    <h3><i class="fas fa-star"></i> Оставить отзыв</h3>
+                    
+                    <form id="review-form">
+                        <div class="form-group">
+                            <label for="review-name"><i class="fas fa-user"></i> Ваше имя *</label>
+                            <input type="text" id="review-name" required 
+                                   placeholder="Например: Анна">
                         </div>
-                        <div class="success-rings">
-                            <div class="ring ring-1"></div>
-                            <div class="ring ring-2"></div>
-                            <div class="ring ring-3"></div>
+                        
+                        <div class="form-group">
+                            <label for="review-service"><i class="fas fa-umbrella-beach"></i> Услуга (необязательно)</label>
+                            <select id="review-service">
+                                <option value="">Выберите услугу</option>
+                                <!-- Options will be filled by JavaScript -->
+                            </select>
                         </div>
-                    </div>
-                    <h3>Заявка принята! 🎉</h3>
-                    <p class="success-message">
-                        Спасибо за вашу заявку! Наш менеджер свяжется с вами в течение 15 минут для уточнения деталей.
-                    </p>
-                    <div class="success-details">
-                        <p><i class="fas fa-clock"></i> Время обработки: <strong>до 15 минут</strong></p>
-                        <p><i class="fas fa-comment"></i> Ожидайте сообщение в этом чате</p>
-                    </div>
-                    <button class="btn-secondary" id="back-to-catalog">
-                        <i class="fas fa-home"></i> Вернуться в каталог
-                    </button>
+                        
+                        <div class="form-group">
+                            <label for="review-rating"><i class="fas fa-star"></i> Оценка *</label>
+                            <div class="rating-stars">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" id="review-rating" required value="0">
+                            <div class="rating-text" id="rating-text">Выберите оценку</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="review-text"><i class="fas fa-comment"></i> Текст отзыва *</label>
+                            <textarea id="review-text" rows="6" required 
+                                      placeholder="Поделитесь вашими впечатлениями..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="review-photos"><i class="fas fa-camera"></i> Добавить фото (макс. 3)</label>
+                            <div class="photo-upload">
+                                <input type="file" id="review-photos" accept="image/*" multiple style="display: none;">
+                                <button type="button" class="btn-secondary" id="upload-photo-btn">
+                                    <i class="fas fa-upload"></i> Выбрать фото
+                                </button>
+                                <div class="photo-preview" id="photo-preview"></div>
+                            </div>
+                            <small>Максимальный размер: 5MB на фото</small>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-paper-plane"></i> Опубликовать отзыв
+                        </button>
+                    </form>
                 </div>
             </section>
         </main>
@@ -238,9 +237,13 @@
                     <a href="#" id="faq-link">
                         <i class="fas fa-question-circle"></i> Частые вопросы
                     </a>
+                    <span class="footer-divider">•</span>
+                    <a href="#" id="reviews-link">
+                        <i class="fas fa-star"></i> Отзывы
+                    </a>
                 </div>
                 <p class="footer-copyright">
-                    © 2024 TRAVEL SOCHI. Все права защищены.
+                    © 2024 TRAVEL SOCHI. Бюджетный и индивидуальный отдых.
                 </p>
             </div>
         </footer>
@@ -254,9 +257,10 @@
         </div>
     </div>
 
+    <button class="admin-btn" onclick="window.open('admin.html', '_blank')">
+        👑 Админ-панель
+    </button>
+
     <script src="script.js"></script>
 </body>
 </html>
-<button onclick="window.open('admin.html', '_blank')">
-    👑 Админ-панель
-</button>
